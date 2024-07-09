@@ -1,0 +1,79 @@
+<template>
+    <lightning-card title="Opportunity Manager">
+        <lightning-button label="Create New Opportunity" onclick={handleCreateNew} class="slds-m-bottom_medium"></lightning-button>
+
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2">
+                <template if:true={allOpportunities}>
+                    <lightning-datatable
+                        data={allOpportunities}
+                        columns={columns}
+                        key-field="Id"
+                        onsave={handleSave}
+                        onrowaction={handleRowAction}
+                        hide-checkbox-column
+                        data-id="all-opportunities">
+                    </lightning-datatable>
+                </template>
+            </div>
+
+            <div class="slds-col slds-size_1-of-2">
+                <template if:true={closedWonOpportunities}>
+                    <lightning-datatable
+                        data={closedWonOpportunities}
+                        columns={columns}
+                        key-field="Id"
+                        onsave={handleSave}
+                        onrowaction={handleRowAction}
+                        hide-checkbox-column
+                        data-id="closed-won-opportunities">
+                    </lightning-datatable>
+                </template>
+            </div>
+        </div>
+        <template if:true={isModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-text-heading_medium">Opportunity</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-record-edit-form object-api-name="Opportunity" record-id={recordId} onsuccess={handleSuccess}>
+                            <lightning-messages></lightning-messages>
+                            <lightning-input-field field-name="Name"></lightning-input-field>
+                            <lightning-input-field field-name="StageName"></lightning-input-field>
+                            <lightning-input-field field-name="CloseDate"></lightning-input-field>
+                            <!-- Add other fields as required -->
+                            <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <template if:true={isDeleteModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseDeleteModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-text-heading_medium">Delete Opportunity</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p>Are you sure you want to delete this opportunity?</p>
+                        <lightning-button label="Cancel" onclick={handleCloseDeleteModal}></lightning-button>
+                        <lightning-button label="Yes" variant="destructive" onclick={handleConfirmDelete}></lightning-button>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
+</template>
